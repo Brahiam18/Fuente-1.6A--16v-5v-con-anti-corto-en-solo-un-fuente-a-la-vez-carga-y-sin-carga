@@ -1,0 +1,31 @@
+% ---------- Etapa 1 (v2.1): red, transformador 18-0-18 V / 5 A, puente rectificador y filtros ----------
+\draw (-6.2,1.5) node[ocirc, label=left:{\scriptsize L}]{} to[fuse, l=$F_1$ T1 A] (-3.8,1.5) to[spst, l=$S_1$] (-2.0,1.5) -- (-1.6,1.5);
+\draw (-6.2,-1.5) node[ocirc, label=left:{\scriptsize N}]{} -- (-1.6,-1.5);
+\node[font=\scriptsize, align=center] at (-5.0,0) {120 V\\60 Hz};
+\draw (-1.6,1.5) to[L] (-1.6,-1.5);
+\draw (0.0,1.5) to[L] (0.0,0) to[L] (0.0,-1.5);
+\draw[thick] (-0.92,1.4) -- (-0.92,-1.4); \draw[thick] (-0.68,1.4) -- (-0.68,-1.4);
+\node[font=\footnotesize\bfseries] at (-0.8,2.4) {$T_1$ 18-0-18 V};
+\node[font=\scriptsize] at (-0.8,1.95) {120 V, 5 A (180 VA)};
+\draw[dashed, gray] (1.0,-3.0) -- (1.0,3.6); \node[gray, font=\scriptsize, anchor=south east] at (0.9,3.0) {fuera de la placa}; \node[gray, font=\scriptsize, anchor=south west] at (1.1,3.0) {placa};
+% secundario: extremos A y B con fusible, toma central a GND
+\draw (0,1.5) -- (1.4,1.5) node[ocirc]{} node[above, font=\tiny]{J1-1} to[fuse, l={$F_2$ T3,15 A}] (3.6,1.5) node[circ](A){} node[above right, net]{A};
+\draw (0,0) -- (1.4,0) node[ocirc]{} node[above, font=\tiny]{J1-2} -- (2.0,0) node[ground]{};
+\node[font=\tiny] at (2.6,0.25) {toma central};
+\draw (0,-1.5) -- (1.4,-1.5) node[ocirc]{} node[below, font=\tiny]{J1-3} to[fuse, l_={$F_3$ T3,15 A}] (3.6,-1.5) node[circ](B){} node[below right, net]{B};
+% puente: D1, D2 hacia V_RAW+ ; D3, D4 desde V_RAW-
+\draw (A) -- (4.4,1.5) to[D*, l=$D_1$] (4.4,3.4) -- (6.6,3.4) node[circ](vp){};
+\draw (B) -- (5.4,-1.5) to[D*, l_=$D_2$] (5.4,3.4);
+\draw (4.4,1.5) node[circ]{} to[D*, invert, l_=$D_3$] (4.4,-3.4) -- (6.6,-3.4) node[circ](vn){};
+\draw (5.4,-1.5) node[circ]{} -- (5.4,-1.0) to[D*, invert, l=$D_4$] (5.4,-3.4);
+\draw (4.4,-3.4) node[circ]{}; \draw (5.4,-3.4) node[circ]{}; \draw (5.4,3.4) node[circ]{};
+\node[font=\scriptsize] at (3.2,-2.6) {$D_1$--$D_4$: 1N5408};
+% filtros
+\draw (vp) to[eC, l_=$C_1$, a^={\SI{15000}{\micro\farad}/50 V}] (6.6,1.2) node[ground]{};
+\draw (vp) -- (9.6,3.4) node[circ]{} to[C, l_=$C_3$, a^=\SI{100}{\nano\farad}] (9.6,1.8) node[ground]{};
+\draw (9.6,3.4) -- (13.2,3.4) node[ocirc]{} node[right, net]{$V_{RAW+}$ (TP1)};
+\draw (vn) to[eC, invert, l_=$C_{2A}$, a^={\SI{6800}{\micro\farad}/50 V}] (6.6,-5.4) node[ground]{};
+\draw (vn) -- (10.2,-3.4) node[circ]{} to[eC, invert, l_=$C_{2B}$, a^={\SI{6800}{\micro\farad}/50 V}] (10.2,-5.4) node[ground]{};
+\draw (10.2,-3.4) -- (12.6,-3.4) node[circ]{} to[C, l_=$C_4$, a^=\SI{100}{\nano\farad}] (12.6,-5.0) node[ground]{};
+\draw (12.6,-3.4) -- (13.2,-3.4) node[ocirc]{} node[right, net]{$V_{RAW-}$ (TP2)};
+\node[font=\scriptsize, anchor=west] at (6.2,-6.3) {$C_{2A}$ y $C_{2B}$ en paralelo = 13\,600~µF (positivo hacia GND)};

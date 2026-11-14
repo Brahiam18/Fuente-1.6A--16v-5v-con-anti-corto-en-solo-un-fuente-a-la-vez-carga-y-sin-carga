@@ -9,8 +9,8 @@ Placa de **una sola cara** (cobre inferior) de **190,5 × 139,7 mm**, que cabe e
 | Archivo | Para qué sirve |
 |---|---|
 | `fuente.sch` y `fuente.brd` | Esquemático y placa en formato EAGLE. En Fusion: *Cargar* los dos archivos juntos con "Crear diseño de la electrónica" marcado. Las piezas están en la biblioteca propia `fuente16`. El esquemático conecta por **etiquetas de red**; el dibujo legible está en `../../esquematicos/` |
-| `cobre_espejado_1a1.pdf` | Cara de cobre **espejada** a escala 1:1, para planchar o insolar |
-| `ensamble_1a1.pdf` | Página 1: lado de componentes a 1:1 (referencias, pin 1, puentes en rojo). Página 2: vista ampliada con referencia y valor |
+| `cobre_1a1_para_planchar.pdf` | Cara de cobre a 1:1 **vista desde arriba, sin espejar**: así se imprime para planchar (al poner el tóner boca abajo sobre el cobre la imagen se invierte sola) |
+| `ensamble_1a1.pdf` | Página 1: **vista desde arriba** (lado de componentes) a 1:1, con pin 1, puentes y TP. Página 2: vista desde arriba ampliada con referencia y valor. Página 3: vista desde el cobre, para soldar |
 | `puentes.md` | Lista de los 8 puentes con red, longitud y extremos |
 | `generador/` | Código en Python que hace la colocación, el ruteo, la verificación y la exportación (`NO_TP=1 python3 buscar.py 3 placa.json`, luego `python3 incremental.py placa.json placa.json` para agregar los puntos de prueba y `python3 build.py placa.json ..`) |
 
@@ -24,7 +24,7 @@ Placa de **una sola cara** (cobre inferior) de **190,5 × 139,7 mm**, que cabe e
 - Las 32 redes están completas, sin cortos, y el `.sch` y el `.brd` son consistentes.
 
 ## Fabricación
-1. Imprimir `cobre_espejado_1a1.pdf` **sin escalar** ("tamaño real"). La regla de abajo debe medir 50 mm.
+1. Imprimir `cobre_1a1_para_planchar.pdf` **sin escalar** y **sin espejar** ("tamaño real"). La regla de abajo debe medir 50 mm.
 2. Transferir, atacar con cloruro férrico y taladrar. El punto blanco de cada pad marca el centro.
 3. Estañar las pistas anchas (secundario, V_RAW, ±16 V y GND) para que soporten mejor los 1,6 A.
 4. Revisar con el multímetro, antes de soldar, que no haya cortos: `+16V`–`GND`, `-16V`–`GND`, `+5V`–`GND`, `VRAWP`–`GND`, `VRAWN`–`GND` y `+16V`–`-16V`.

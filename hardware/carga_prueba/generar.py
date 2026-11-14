@@ -2,7 +2,7 @@
   JP1 puenteado (alambre o interruptor): (R1+R2) ‖ (R3+R4) = 10 Ω  -> 1,6 A con 16 V (corriente completa)
   JP1 abierto:                            R1+R2           = 20 Ω  -> 0,8 A con 16 V (media corriente)
 En los dos casos cada resistencia disipa 6,4 W. Genera carga.sch, carga.brd (EAGLE / Fusion),
-cobre_espejado_1a1.pdf, ensamble_1a1.pdf e img/*.png.   Uso: python3 generar.py"""
+cobre_1a1_para_planchar.pdf, ensamble_1a1.pdf e img/*.png.   Uso: python3 generar.py"""
 import os, sys, collections
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'pcb', 'generador'))
@@ -110,26 +110,27 @@ def fig_page():
     fig = plt.figure(figsize=(PAGE[0]/25.4, PAGE[1]/25.4)); ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(W/2-PAGE[0]/2, W/2+PAGE[0]/2); ax.set_ylim(H+20-PAGE[1], H+20); ax.set_aspect('equal'); ax.axis('off'); return fig, ax
 def copper(path, png):
-    fig, ax = fig_page(); ax.invert_xaxis()
+    """cobre inferior visto desde arriba, sin espejar (al planchar boca abajo queda bien visto desde abajo)"""
+    fig, ax = fig_page()
     for n in NETS:
         for s in segs(n): ax.plot([s[0], s[2]], [s[1], s[3]], color='k', lw=TW*PT, solid_capstyle='round')
     for r in PARTS:
         d = PKG[PARTS[r][0]][2]
         for x, y in pads_of(r).values(): ax.add_patch(Circle((x, y), d/2, fc='k', lw=0)); ax.add_patch(Circle((x, y), 0.35, fc='w', lw=0, zorder=4))
     for x, y in HOLES: ax.add_patch(Circle((x, y), 1.6, fc='none', ec='k', lw=0.8)); ax.add_patch(Circle((x, y), 0.4, fc='k'))
-    # texto en cobre: se dibuja como trazo en coordenadas de la placa, así queda espejado igual que las pistas
+    # texto en cobre: visto desde arriba va espejado, para que se lea derecho en el cobre desde abajo
     from matplotlib.textpath import TextPath
     from matplotlib.patches import PathPatch
     from matplotlib.font_manager import FontProperties
     for t, (cx, cy), hgt in (('CARGA RL 10/20 Ω', (52, 50), 4.0), ('B. Campiño - U. Ibagué', (52, 30), 2.5)):
         tp = TextPath((0, 0), t, size=hgt, prop=FontProperties(weight='bold'))
         bb = tp.get_extents()
-        tr = matplotlib.transforms.Affine2D().translate(cx-(bb.x0+bb.x1)/2, cy-(bb.y0+bb.y1)/2) + ax.transData
+        tr = matplotlib.transforms.Affine2D().translate(-(bb.x0+bb.x1)/2, -(bb.y0+bb.y1)/2).scale(-1, 1).translate(cx, cy) + ax.transData
         ax.add_patch(PathPatch(tp, fc='k', lw=0, transform=tr))
     ax.add_patch(Rectangle((0, 0), W, H, fc='none', ec='k', lw=0.4, ls=(0, (3, 2))))
     x0 = W/2-25; ax.plot([x0, x0+50], [-6, -6], color='k', lw=0.6)
     for t in range(0, 51, 10): ax.plot([x0+t, x0+t], [-6.8, -5.2], color='k', lw=0.6)
-    ax.text(W/2, -10, 'Carga de prueba R_L  |  CARA DE COBRE ESPEJADA  |  imprimir 1:1 sin escalar: la regla debe medir 50 mm  |  placa %.0f x %.0f mm' % (W, H), ha='center', fontsize=6)
+    ax.text(W/2, -10, 'Carga de prueba R_L  |  COBRE VISTO DESDE ARRIBA, NO ESPEJAR (se plancha boca abajo)  |  imprimir 1:1 sin escalar: la regla debe medir 50 mm  |  placa %.0f x %.0f mm' % (W, H), ha='center', fontsize=6)
     fig.savefig(path); fig.savefig(png, dpi=200); plt.close(fig)
 def assembly(path, png):
     with PdfPages(path) as pdf:
@@ -148,7 +149,7 @@ def assembly(path, png):
             ax.text(x+4.2, y, t, fontsize=4.5, va='center', color='#8b0000', fontweight='bold', zorder=8)
         ax.text(10, 89, 'J1: a J4 (+16 V / GND) o a J5 (−16 V / GND) de la fuente', fontsize=6, fontweight='bold')
         ax.text(10, 6.5, 'JP1 puenteado = 10 Ω → 1,6 A  |  JP1 abierto = 20 Ω → 0,8 A', fontsize=6, fontweight='bold')
-        ax.text(W/2, -6, 'Lado de componentes 1:1. Resistencias de cemento 10 Ω / 10 W LEVANTADAS 5–10 mm de la placa (se calientan a más de 150 °C).', ha='center', fontsize=5.5)
+        ax.text(W/2, -6, 'VISTA DESDE ARRIBA 1:1. Resistencias de cemento 10 Ω / 10 W LEVANTADAS 5–10 mm de la placa (se calientan a más de 150 °C).', ha='center', fontsize=5.5)
         ax.text(W/2, -10, 'Cada resistencia disipa 6,4 W en los dos modos. No tocar durante la prueba; dejar enfriar antes de manipular.', ha='center', fontsize=5.5)
         pdf.savefig(fig); fig.savefig(png, dpi=200); plt.close(fig)
 
@@ -164,6 +165,6 @@ if __name__ == '__main__':
     from shapely.geometry import LineString, Point
     edge = min(LineString(s[:2] and [(s[0], s[1]), (s[2], s[3])]).buffer(TW/2).distance(Point(hx, hy).buffer(1.6)) for n in NETS for s in segs(n) for hx, hy in HOLES)
     cu = min(min(s[0], s[2])-TW/2 for n in NETS for s in segs(n)); print('distancia pista-agujero de montaje %.1f mm, pista-borde izquierdo %.2f mm' % (edge, cu))
-    copper(os.path.join(HERE, 'cobre_espejado_1a1.pdf'), os.path.join(HERE, 'img', 'cobre_espejado.png'))
+    copper(os.path.join(HERE, 'cobre_1a1_para_planchar.pdf'), os.path.join(HERE, 'img', 'cobre_para_planchar.png'))
     assembly(os.path.join(HERE, 'ensamble_1a1.pdf'), os.path.join(HERE, 'img', 'ensamble.png'))
     print('listo')

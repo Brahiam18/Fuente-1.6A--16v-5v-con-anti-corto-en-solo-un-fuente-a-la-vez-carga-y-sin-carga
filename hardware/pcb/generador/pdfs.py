@@ -1,4 +1,4 @@
-"""Hojas para imprimir: cobre espejado 1:1 y ensamble (lado componentes)."""
+"""Hojas para imprimir: cobre 1:1 para planchar (visto desde arriba, sin espejar) y ensamble (vista desde arriba y desde el cobre)."""
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle, Polygon as MPoly
@@ -23,7 +23,9 @@ def _fig(W, H, page=PAGE, top=12):
     return fig, ax
 
 def copper_pdf(path, parts, routes, W, H, holes, png=None):
-    fig, ax = _fig(W, H); ax.invert_xaxis()
+    """Cobre inferior visto DESDE ARRIBA (sin espejar). Al planchar la hoja boca abajo sobre el cobre, la imagen se
+    invierte y queda bien vista desde abajo; así los pines coinciden con las piezas puestas desde arriba."""
+    fig, ax = _fig(W, H)
     for net, rt in routes.items():
         for (x0, y0, x1, y1) in merge_edges(rt['edges'], 0):
             ax.plot([x0, x1], [y0, y1], color='k', lw=N.width_of(net)*PT, solid_capstyle='round', zorder=2)
@@ -42,7 +44,12 @@ def copper_pdf(path, parts, routes, W, H, holes, png=None):
         ax.plot([x, x+sx*5], [y, y], color='k', lw=0.4); ax.plot([x, x], [y, y+sy*5], color='k', lw=0.4)
     x0 = W/2-25; ax.plot([x0, x0+50], [-5, -5], color='k', lw=0.6)
     for t in range(0, 51, 10): ax.plot([x0+t, x0+t], [-5.8, -4.2], color='k', lw=0.6)
-    ax.text(W/2, -8.5, 'Fuente ±16 V / 1,6 A y +5 V (v2.2, pistas a 45°)  |  CARA DE COBRE ESPEJADA  |  imprimir 1:1 sin escalar: la regla debe medir 50 mm  |  placa %.1f x %.1f mm' % (W, H), ha='center', fontsize=6)
+    ax.text(W/2, -8.5, 'Fuente ±16 V / 1,6 A y +5 V (v2.2)  |  COBRE VISTO DESDE ARRIBA, NO ESPEJAR  |  imprimir 1:1 sin escalar: la regla debe medir 50 mm  |  placa %.1f x %.1f mm' % (W, H), ha='center', fontsize=6)
+    ax.text(W/2, -12, 'Planchar con el tóner contra el cobre: al transferir la imagen se invierte sola y las piezas, puestas desde el lado sin cobre, coinciden con ensamble_1a1.pdf', ha='center', fontsize=5.5)
+    ax.text(W/2, H+3, 'borde superior: Q1  Q2  Q4  U1  (disipador +16 V)', ha='center', fontsize=6)
+    ax.text(W/2, -2.2, 'borde inferior: Q5  Q6  Q8  U2  (disipador -16 V)', ha='center', fontsize=6)
+    ax.text(-3, H/2, 'C1, C2A, C2B', rotation=90, ha='center', va='center', fontsize=6)
+    ax.text(W+3, H/2, 'borneras J2A, J2B, J4, J5', rotation=90, ha='center', va='center', fontsize=6)
     fig.savefig(path, format='pdf')
     if png: fig.savefig(png, dpi=200)
     plt.close(fig)
@@ -97,7 +104,8 @@ def assembly_pdf(path, parts, routes, W, H, holes, jl, png=None):
         ax.add_patch(Rectangle((0, 0), W, H, fc='#f6f3e8', ec='k', lw=0.8, zorder=0))
         for (x, y) in holes: ax.add_patch(Circle((x, y), 1.6, fc='w', ec='k', lw=0.6, zorder=1))
         _draw(ax, parts, routes, jl, fs=3.0, values=False)
-        ax.text(W/2, -5, 'Lado de componentes 1:1  |  rojo = puentes de alambre aislado (P1..P%d)  |  círculo azul = pin 1  |  rojo con nombre = punto de prueba TP  |  línea gruesa del TO-220 = aleta (va al disipador)' % len(jl), ha='center', fontsize=5.5)
+        ax.text(W/2, H+5, 'VISTA DESDE ARRIBA (lado de componentes, sin cobre): las piezas se ponen por este lado y se sueldan por el cobre', ha='center', fontsize=7, fontweight='bold')
+        ax.text(W/2, -5, 'Escala 1:1  |  rojo = puentes de alambre aislado (P1..P%d)  |  círculo azul = pin 1  |  rojo con nombre = punto de prueba TP  |  línea gruesa del TO-220 = aleta (va al disipador)' % len(jl), ha='center', fontsize=5.5)
         ax.text(W/2, -8.5, 'Disipadores: Q1, Q2, Q4 y U1 en el borde superior; Q5, Q6, Q8 y U2 en el inferior; uno de <= 2 °C/W por riel, cada pieza con mica y buje', ha='center', fontsize=5.5)
         pdf.savefig(fig)
         if png: fig.savefig(png, dpi=200)
@@ -108,7 +116,23 @@ def assembly_pdf(path, parts, routes, W, H, holes, jl, png=None):
         ax.add_patch(Rectangle((0, 0), W, H, fc='#f6f3e8', ec='k', lw=0.8, zorder=0))
         for (x, y) in holes: ax.add_patch(Circle((x, y), 1.6, fc='w', ec='k', lw=0.6, zorder=1))
         _draw(ax, parts, routes, jl, fs=3.6*z, values=True)
-        ax.text(W/2, H+4/z*2, 'Fuente ±16 V / 1,6 A y +5 V (v2.2)  -  ensamble ampliado (escala %.2f:1, A4 horizontal): referencia y valor de cada pieza' % z, ha='center', fontsize=9, fontweight='bold')
+        ax.text(W/2, H/2+PH/2/z-2-4/z, 'Fuente ±16 V / 1,6 A y +5 V (v2.2)  -  VISTA DESDE ARRIBA ampliada (escala %.2f:1, A4 horizontal): referencia y valor de cada pieza' % z, ha='center', va='top', fontsize=9, fontweight='bold')
+        pdf.savefig(fig); plt.close(fig)
+        # página 3: vista desde el cobre (para soldar y revisar), espejada respecto a las anteriores
+        fig = plt.figure(figsize=(PW/25.4, PH/25.4)); ax = fig.add_axes([0, 0, 1, 1])
+        ax.set_xlim(W/2-PW/2/z, W/2+PW/2/z); ax.set_ylim(H/2-PH/2/z-2, H/2+PH/2/z-2); ax.set_aspect('equal'); ax.axis('off'); ax.invert_xaxis()
+        ax.add_patch(Rectangle((0, 0), W, H, fc='#fbf7ee', ec='k', lw=0.8, zorder=0))
+        for (x, y) in holes: ax.add_patch(Circle((x, y), 1.6, fc='w', ec='k', lw=0.6, zorder=1))
+        for net, rt in routes.items():
+            for (x0, y0, x1, y1) in merge_edges(rt['edges'], 0):
+                ax.plot([x0, x1], [y0, y1], color='#c58b3a', lw=N.width_of(net)*PT*z, solid_capstyle='round', zorder=2)
+        for ref, p in parts.items():
+            pads = p.pads()
+            for pin, (x, y) in pads.items():
+                ax.add_patch(Circle((x, y), padd(p.kind)/2, fc='#b87333', ec='k', lw=0.3, zorder=3)); ax.add_patch(Circle((x, y), 0.4, fc='w', lw=0, zorder=4))
+            x, y = pads['1']
+            ax.text(x, y+1.9, ref, fontsize=2.6*z, ha='center', va='bottom', color='#0b3d91', fontweight='bold', zorder=6)
+        ax.text(W/2, H/2+PH/2/z-2-4/z, 'VISTA DESDE EL COBRE (lado de soldadura): espejada respecto a las páginas 1 y 2. Nombre de cada pieza junto a su pin 1', ha='center', va='top', fontsize=9, fontweight='bold')
         pdf.savefig(fig); plt.close(fig)
 
 def jumpers(parts, routes):

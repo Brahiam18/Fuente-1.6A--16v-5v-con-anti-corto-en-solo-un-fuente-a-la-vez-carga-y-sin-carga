@@ -14,22 +14,22 @@ En la versión 2.2, $R_7$ y $R_{15}$ son dos huellas de 1~W cada una ($R_{7A}$, 
 En la carpeta \texttt{hardware/pcb/} están:
 \begin{itemize}
 \item \texttt{fuente.sch} y \texttt{fuente.brd}, en formato EAGLE, que Fusion Electronics abre.
-\item \texttt{cobre\_espejado\_1a1.pdf}: el cobre espejado a escala 1:1, con una regla de 50~mm para comprobar la escala.
-\item \texttt{ensamble\_1a1.pdf}: vista de componentes a 1:1 y una vista ampliada con valores.
+\item \texttt{cobre\_1a1\_para\_planchar.pdf}: el cobre a escala 1:1 visto desde el lado de componentes, sin espejar, con una regla de 50~mm. Al planchar la hoja boca abajo sobre el cobre la imagen se invierte y queda correcta vista desde abajo.
+\item \texttt{ensamble\_1a1.pdf}: vista desde arriba a 1:1, vista ampliada con valores y vista desde el cobre para soldar.
 \item \texttt{puentes.md}: la lista de los ocho puentes.
 \end{itemize}
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=0.86\textwidth]{pcb_ensamble.png}
+\includegraphics[width=0.8\textwidth]{pcb_ensamble.png}
 \caption{Vista de ensamble (lado de componentes). Rojo: puentes de alambre P1--P8; círculos rojos con nombre: puntos de prueba TP1--TP15. Línea gruesa de cada TO-220/TO-126: aleta, que va al disipador. Círculo azul: pin~1.}
 \label{fig:pcb_ens}
 \end{figure*}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{pcb_cobre_espejado.png}
-\caption{Cara de cobre espejada (reducida; la hoja para imprimir es la de 1:1).}
+\includegraphics[width=\linewidth]{pcb_cobre.png}
+\caption{Cara de cobre vista desde el lado de componentes, como se imprime para planchar (reducida; la hoja para imprimir es la de 1:1).}
 \label{fig:pcb_cu}
 \end{figure}
 

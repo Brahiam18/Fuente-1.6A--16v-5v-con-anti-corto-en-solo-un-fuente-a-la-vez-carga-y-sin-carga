@@ -50,7 +50,7 @@ Fuente de alimentación lineal regulada diseñada para los 4 controladores PID a
 | `calculos/` | `calculos.py`: todos los cálculos del diseño, y sus resultados en JSON |
 | `esquematicos/` | Esquemáticos por etapa y completo (circuitikz: PDF, PNG y `.tikz`) |
 | `simulacion/` | Netlist, modelos y script de **ngspice**, gráficas y resultados. `simulacion/proteus/`: proyecto de **Proteus** (`.pdsprj`) |
-| `hardware/pcb/` | **EAGLE / Fusion** (`fuente.sch`, `fuente.brd`), **cobre espejado 1:1** para planchar, hoja de ensamble, puentes y generador |
+| `hardware/pcb/` | **EAGLE / Fusion** (`fuente.sch`, `fuente.brd`), **cobre 1:1 para planchar** (vista desde arriba, sin espejar), hoja de ensamble vista desde arriba, puentes y generador |
 | `hardware/` | Lista de materiales (`.md`, `.csv` y `.xlsx`) |
 | `hardware/carga_prueba/` | **Placa de la carga de prueba R_L**: 4 × 10 Ω / 10 W con selector JP1 (puenteado = 10 Ω / 1,6 A, abierto = 20 Ω / 0,8 A) |
 | `pruebas/` | Plan de pruebas y tabla de mediciones para llenar |

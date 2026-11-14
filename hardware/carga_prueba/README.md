@@ -17,7 +17,7 @@ Placa de **una cara** de **95 × 95 mm** para las 4 resistencias de cemento de *
 ## Archivos
 | Archivo | Para qué sirve |
 |---|---|
-| `cobre_espejado_1a1.pdf` | Cara de cobre espejada a 1:1 para planchar (la regla debe medir 50 mm) |
+| `cobre_1a1_para_planchar.pdf` | Cara de cobre a 1:1 vista desde arriba, sin espejar: se imprime así y se plancha boca abajo (la regla debe medir 50 mm) |
 | `ensamble_1a1.pdf` | Lado de componentes a 1:1 |
 | `carga.sch`, `carga.brd` | Formato EAGLE para Fusion (cargar los dos juntos) |
 | `generar.py` | Genera todo lo anterior (`python3 generar.py`) |

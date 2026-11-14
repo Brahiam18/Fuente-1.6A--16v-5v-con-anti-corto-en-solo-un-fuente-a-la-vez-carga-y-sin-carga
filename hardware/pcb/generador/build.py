@@ -45,7 +45,7 @@ if __name__ == '__main__':
     bad, md, ns = X.check_board(os.path.join(dst, 'fuente.brd'))
     print('xmlcheck placa:', ns, 'señales, holgura mínima %.3f mm, problemas:' % md, bad[:5])
     print('sch vs brd:', X.check_sch_vs_brd(os.path.join(dst, 'fuente.sch'), os.path.join(dst, 'fuente.brd')) or 'consistentes')
-    pdfs.copper_pdf(os.path.join(dst, 'cobre_espejado_1a1.pdf'), parts, routes, W, H, P.HOLES, png=os.path.join(dst, 'img', 'cobre_espejado.png'))
+    pdfs.copper_pdf(os.path.join(dst, 'cobre_1a1_para_planchar.pdf'), parts, routes, W, H, P.HOLES, png=os.path.join(dst, 'img', 'cobre_para_planchar.png'))
     pdfs.assembly_pdf(os.path.join(dst, 'ensamble_1a1.pdf'), parts, routes, W, H, P.HOLES, jl, png=os.path.join(dst, 'img', 'ensamble.png'))
     L = ['| N.º | Red | Longitud aprox. | Extremos |', '|:-:|---|--:|---|']
     for k, j in enumerate(jl, 1): L.append('| P%d | `%s` | %d mm | %s |' % (k, j['net'], round(j['length']), ' ↔ '.join(j['ends'])))

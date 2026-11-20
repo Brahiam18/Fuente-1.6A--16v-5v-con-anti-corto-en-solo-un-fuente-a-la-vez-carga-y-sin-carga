@@ -43,6 +43,17 @@ Fuente de alimentación lineal regulada diseñada para los 4 controladores PID a
 | Corto +16 V (red −10 % / nominal / +10 %) | 0,93 / 0,67 / 0,43 A (con 1 V de salida); 0,32 A en corto franco con red nominal | 0,89 / 0,60 / 0,28 A |
 | Recuperación del corto con R_L | 15,98 V | 15,9 V |
 
+### Prueba en hardware (montaje real) y mejoras pendientes
+Los resultados de arriba son de simulación. En el montaje real la fuente **no cumplió con la carga**:
+
+- **Resultado:** bajo carga, el voltaje de salida tuvo caídas grandes y la fuente no entregó la corriente que necesitan los PID.
+- **Cómo se entregó el proyecto:** con una fuente de corriente constante aparte y el limitador de corriente ajustado muy bajo.
+- **Por revisar en una versión 3** (causas posibles, aún sin medir cuál fue):
+  - Dimensionamiento de los transistores de paso y de su polarización para la corriente de carga.
+  - Umbral del limitador anticorto (foldback), para que no actúe antes de la corriente nominal.
+  - Caídas en diodos, resistencias de sensado y pistas.
+  - Etapa de entrada (transformador, rectificador y filtro): rizado y voltaje mínimo bajo carga.
+
 ## Carpetas
 | Carpeta | Contenido |
 |---|---|
